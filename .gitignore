@@ -1,0 +1,6 @@
+# Auto-generated
+.webscraper-venv/
+**/__pycache__/
+.idea/
+*.log
+
