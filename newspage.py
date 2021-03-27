@@ -1,8 +1,9 @@
-from requests_html import HTMLSession
-from cfscrape import create_scraper
-import time
-from bs4 import BeautifulSoup
 import logging
+import time
+from sys import exit
+from typing import Union
+
+from requests_html import HTMLSession
 
 
 class NewsPage:
@@ -21,13 +22,13 @@ class NewsPage:
         article = [published_at, title, image_url, language, url, author, category, content]
         self.new_articles.append(article)
 
-    def get_url_content(self, url):
+    def get_url_content(self, url: str, headers: Union[dict[str], None] = None):
         try:
-            self.session = HTMLSession()
-            self.source = self.session.get(url).html
-            print(self.source)
-            logging.info("--- %s took %s seconds ---" % (__name__, time.time() - self.start_time))
-            return self.source
+            self.session: HTMLSession = HTMLSession()
+            source = self.session.get(url, headers=headers).html
+            logging.info(f"--- {url} took {time.time() - self.start_time} seconds ---")
+            return source
         except Exception:
-            logging.error("-- ERROR in %s retrieving content  --" % (__name__))
-
+            logging.error(f"-- In retrieving content of {url} --")
+            print(f"Error in retrieving content of {url}")
+            exit(1)
